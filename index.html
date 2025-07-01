@@ -1,466 +1,742 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative Thumbnails - Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        inter: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
+    <title>Creative Portfolio - Thumbnail Designer</title>
     <style>
-        /* Custom styles for smooth transitions and active states */
-        .filter-btn {
-            transition: all 0.3s ease-in-out;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .filter-btn.active {
-            background-color: #2563eb; /* blue-600 */
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --text-light: #f8fafc;
+            --text-gray: #64748b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --accent: #06b6d4;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255,255,255,0.5); }
+            to { text-shadow: 0 0 30px rgba(255,255,255,0.8); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
             color: white;
-            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.5);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .portfolio-item {
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease-in-out, visibility 0.4s;
-            visibility: visible;
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav a:hover {
+            color: var(--accent);
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            padding: 8rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: 30px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .thumbnail-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
             opacity: 1;
             transform: scale(1);
         }
-        .portfolio-item.hidden {
-            visibility: hidden;
+
+        .thumbnail-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border-color: var(--primary);
+        }
+
+        .thumbnail-card.hidden {
             opacity: 0;
-            transform: scale(0.9);
-            height: 0;
-            margin: 0;
-            padding: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            position: relative;
             overflow: hidden;
         }
-        /* Custom class for the message box */
-        .message-box {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+        .card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%);
+            background-size: 20px 20px;
+            animation: slide 2s linear infinite;
         }
-        /* Loading spinner */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+
+        @keyframes slide {
+            0% { background-position: 0 0; }
+            100% { background-position: 20px 20px; }
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .card-category {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-description {
+            color: var(--text-gray);
+            margin-top: 1rem;
+            line-height: 1.5;
+        }
+
+        /* About Section */
+        .about {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-dark));
+            text-align: center;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about p {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+        }
+
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .skill-item {
+            background: var(--bg-dark);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 3rem auto 0;
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: var(--text-gray);
+            font-weight: 500;
+            text-align: left;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .submit-btn {
+            padding: 1rem 2rem;
+            background: var(--gradient);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: var(--text-gray);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .nav {
+                top: 1rem;
+                padding: 0.75rem 1.5rem;
+            }
+            
+            .nav ul {
+                gap: 1rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .filter-buttons {
+                gap: 0.5rem;
+            }
+            
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out forwards;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-inter antialiased">
-
-    <!-- Header & Navigation -->
-    <header class="bg-white/80 backdrop-blur-lg shadow-sm fixed w-full z-50 top-0">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex-shrink-0">
-                    <a href="#home" class="text-3xl font-extrabold text-gray-900">
-                        Creative<span class="text-blue-600">.</span>
-                    </a>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#home" class="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Home</a>
-                    <a href="#portfolio" class="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Portfolio</a>
-                    <a href="#ai-generator" class="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">✨ AI Ideas</a>
-                    <a href="#about" class="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">About</a>
-                    <a href="#contact" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg">Contact Us</a>
-                </div>
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    </button>
-                </div>
-            </div>
-        </nav>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden hidden bg-white/90 backdrop-blur-lg">
-            <a href="#home" class="block text-gray-700 py-3 px-4 hover:bg-blue-50 transition-colors duration-300">Home</a>
-            <a href="#portfolio" class="block text-gray-700 py-3 px-4 hover:bg-blue-50 transition-colors duration-300">Portfolio</a>
-            <a href="#ai-generator" class="block text-gray-700 py-3 px-4 hover:bg-blue-50 transition-colors duration-300">✨ AI Ideas</a>
-            <a href="#about" class="block text-gray-700 py-3 px-4 hover:bg-blue-50 transition-colors duration-300">About</a>
-            <a href="#contact" class="block text-gray-700 py-3 px-4 hover:bg-blue-50 transition-colors duration-300">Contact</a>
-        </div>
-    </header>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
 
     <!-- Hero Section -->
-    <main id="home" class="pt-20">
-        <section class="min-h-[calc(100vh-5rem)] flex items-center bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
-                <div class="text-center md:text-left">
-                    <h1 class="text-5xl md:text-7xl font-extrabold text-gray-900 leading-tight mb-6">
-                        Thumbnails that <span class="text-blue-600">Click</span>.
-                    </h1>
-                    <p class="text-lg text-gray-600 max-w-xl mx-auto md:mx-0 mb-8">
-                        I design stunning, high-CTR thumbnails that capture attention, drive engagement, and make your content unforgettable.
-                    </p>
-                    <a href="#portfolio" class="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                        Explore My Work
-                    </a>
-                </div>
-                <div class="hidden md:block">
-                    <img src="https://placehold.co/600x400/E2E8F0/4A5568?text=Hero+Image" alt="Creative Thumbnail Example" class="rounded-2xl shadow-2xl w-full">
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Creative Thumbnails</h1>
+            <p>Stunning designs that capture attention and drive engagement</p>
+            <a href="#portfolio" class="cta-button">Explore My Work</a>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio">
+        <h2 class="section-title">Featured Work</h2>
+        
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="youtube">YouTube</button>
+            <button class="filter-btn" data-filter="social">Social Media</button>
+            <button class="filter-btn" data-filter="gaming">Gaming</button>
+            <button class="filter-btn" data-filter="business">Business</button>
+        </div>
+
+        <div class="gallery" id="gallery">
+            <div class="thumbnail-card fade-in" data-category="youtube">
+                <div class="card-image">YouTube Thumbnail #1</div>
+                <div class="card-content">
+                    <h3 class="card-title">Epic Gaming Moment</h3>
+                    <p class="card-category">YouTube</p>
+                    <p class="card-description">High-energy gaming thumbnail designed to maximize click-through rates with bold typography and dynamic composition.</p>
                 </div>
             </div>
-        </section>
 
-        <!-- Portfolio Section -->
-        <section id="portfolio" class="py-24 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Featured Work</h2>
-                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">A selection of thumbnails designed for various niches and platforms.</p>
-                </div>
-                <div class="flex justify-center flex-wrap gap-3 mb-12">
-                    <button class="filter-btn active px-5 py-2.5 rounded-lg font-semibold bg-white shadow-sm" data-filter="all">All</button>
-                    <button class="filter-btn px-5 py-2.5 rounded-lg font-semibold bg-white shadow-sm" data-filter="youtube">YouTube</button>
-                    <button class="filter-btn px-5 py-2.5 rounded-lg font-semibold bg-white shadow-sm" data-filter="social">Social Media</button>
-                    <button class="filter-btn px-5 py-2.5 rounded-lg font-semibold bg-white shadow-sm" data-filter="gaming">Gaming</button>
-                    <button class="filter-btn px-5 py-2.5 rounded-lg font-semibold bg-white shadow-sm" data-filter="business">Business</button>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Portfolio items will be dynamically added here -->
+            <div class="thumbnail-card fade-in" data-category="social">
+                <div class="card-image">Social Media Design</div>
+                <div class="card-content">
+                    <h3 class="card-title">Brand Campaign</h3>
+                    <p class="card-category">Social Media</p>
+                    <p class="card-description">Clean, modern design for social media campaign focusing on brand consistency and visual impact.</p>
                 </div>
             </div>
-        </section>
 
-        <!-- AI Thumbnail Idea Generator Section -->
-        <section id="ai-generator" class="py-24 bg-white">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">✨ AI Thumbnail Idea Generator</h2>
-                    <p class="text-lg text-gray-600">Stuck for ideas? Enter your video title and let AI generate some creative concepts for you!</p>
-                </div>
-                <div class="bg-gray-50 p-8 rounded-2xl shadow-lg">
-                    <div class="flex flex-col sm:flex-row gap-4 mb-6">
-                        <input type="text" id="video-title-input" placeholder="Enter your video title here..." class="flex-grow block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4 text-lg">
-                        <button id="generate-ideas-btn" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center">
-                            <span id="generate-btn-text">Generate Ideas</span>
-                            <svg id="generate-btn-spinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <div id="idea-container" class="mt-8 space-y-6">
-                        <!-- AI Generated ideas will be displayed here -->
-                    </div>
+            <div class="thumbnail-card fade-in" data-category="gaming">
+                <div class="card-image">Gaming Thumbnail</div>
+                <div class="card-content">
+                    <h3 class="card-title">Battle Royale</h3>
+                    <p class="card-category">Gaming</p>
+                    <p class="card-description">Action-packed thumbnail featuring explosive effects and character highlights for maximum engagement.</p>
                 </div>
             </div>
-        </section>
 
-        <!-- About Section -->
-        <section id="about" class="py-24 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
-                <div>
-                    <img src="https://placehold.co/500x600/3B82F6/FFFFFF?text=About+Me" alt="About Me" class="rounded-2xl shadow-xl w-full">
-                </div>
-                <div>
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">Who I Am</h2>
-                    <p class="text-lg text-gray-600 mb-6">
-                        I'm a passionate thumbnail designer with over 5 years of experience creating compelling visual content that drives engagement and builds brands. My designs combine psychological principles with cutting-edge aesthetics to maximize click-through rates and viewer retention.
-                    </p>
-                    <p class="text-lg text-gray-600 mb-8">
-                        I specialize in creating thumbnails that not only look great but also perform exceptionally well across all platforms and niches.
-                    </p>
-                     <div class="grid grid-cols-2 gap-6">
-                        <div class="bg-gray-100 p-6 rounded-lg">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">Creative Design</h3>
-                            <p class="text-gray-600">Innovative visual concepts that stand out.</p>
-                        </div>
-                        <div class="bg-gray-100 p-6 rounded-lg">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">Performance Focus</h3>
-                            <p class="text-gray-600">Data-driven designs for maximum CTR.</p>
-                        </div>
-                     </div>
+            <div class="thumbnail-card fade-in" data-category="business">
+                <div class="card-image">Business Thumbnail</div>
+                <div class="card-content">
+                    <h3 class="card-title">Marketing Strategy</h3>
+                    <p class="card-category">Business</p>
+                    <p class="card-description">Professional business thumbnail with clean lines and corporate-friendly color scheme.</p>
                 </div>
             </div>
-        </section>
 
-        <!-- Contact Section -->
-        <section id="contact" class="py-24 bg-white">
-            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Let's Work Together</h2>
-                    <p class="text-lg text-gray-600">Ready to create thumbnails that get results? Let's discuss your project!</p>
+            <div class="thumbnail-card fade-in" data-category="youtube">
+                <div class="card-image">YouTube Design #2</div>
+                <div class="card-content">
+                    <h3 class="card-title">Tutorial Series</h3>
+                    <p class="card-category">YouTube</p>
+                    <p class="card-description">Educational content thumbnail with clear hierarchy and instructional visual elements.</p>
                 </div>
-                <form id="contact-form" class="space-y-6 bg-gray-50 p-8 rounded-2xl shadow-lg">
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                        <input type="text" id="name" name="name" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" required>
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" id="email" name="email" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" required>
-                    </div>
-                    <div>
-                        <label for="project-type" class="block text-sm font-medium text-gray-700 mb-1">Project Type</label>
-                        <select id="project-type" name="project-type" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3">
-                            <option value="">Select a project type</option>
-                            <option value="youtube">YouTube Thumbnail</option>
-                            <option value="social">Social Media Design</option>
-                            <option value="gaming">Gaming Thumbnail</option>
-                            <option value="business">Business Thumbnail</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="project-details" class="block text-sm font-medium text-gray-700 mb-1">Project Details</label>
-                        <textarea id="project-details" name="project-details" rows="4" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 p-3" required></textarea>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="w-full bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">Send Message</button>
-                    </div>
-                </form>
             </div>
-        </section>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-gray-400">&copy; 2025 Creative Thumbnails. All rights reserved.</p>
-            <div class="mt-6 flex justify-center space-x-6">
-                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Twitter</a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Instagram</a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">LinkedIn</a>
+            <div class="thumbnail-card fade-in" data-category="social">
+                <div class="card-image">Instagram Post</div>
+                <div class="card-content">
+                    <h3 class="card-title">Lifestyle Brand</h3>
+                    <p class="card-category">Social Media</p>
+                    <p class="card-description">Aesthetic lifestyle brand content optimized for Instagram's visual-first platform.</p>
+                </div>
             </div>
         </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="about-content">
+            <h2 class="section-title">About Me</h2>
+            <p>I'm a passionate thumbnail designer with over 5 years of experience creating compelling visual content that drives engagement and builds brands. My designs combine psychological principles with cutting-edge aesthetics to maximize click-through rates and viewer retention.</p>
+            <p>I specialize in creating thumbnails that not only look great but also perform exceptionally well across all platforms and niches.</p>
+            
+            <div class="skills">
+                <div class="skill-item">
+                    <div class="skill-icon">🎨</div>
+                    <h3>Creative Design</h3>
+                    <p>Innovative visual concepts that stand out</p>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-icon">📈</div>
+                    <h3>Performance Focus</h3>
+                    <p>Data-driven designs for maximum CTR</p>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-icon">⚡</div>
+                    <h3>Fast Delivery</h3>
+                    <p>Quick turnaround without compromising quality</p>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-icon">🎯</div>
+                    <h3>Brand Consistency</h3>
+                    <p>Maintaining your unique visual identity</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <h2 class="section-title">Let's Work Together</h2>
+        <p style="color: var(--text-gray); font-size: 1.2rem; margin-bottom: 2rem;">Ready to create thumbnails that get results? Let's discuss your project!</p>
+        
+        <form class="contact-form" id="contactForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="project">Project Type</label>
+                <input type="text" id="project" name="project" placeholder="YouTube, Social Media, Gaming, etc.">
+            </div>
+            <div class="form-group">
+                <label for="message">Project Details</label>
+                <textarea id="message" name="message" rows="5" placeholder="Tell me about your project, style preferences, and timeline..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="social-links">
+            <a href="#" title="Instagram">📷</a>
+            <a href="#" title="Behance">🎨</a>
+            <a href="#" title="Dribbble">🏀</a>
+            <a href="#" title="LinkedIn">💼</a>
+        </div>
+        <p>&copy; 2025 Creative Thumbnails. All rights reserved.</p>
     </footer>
 
-    <!-- Message Box -->
-    <div id="message-box" class="message-box fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 transform translate-y-2 pointer-events-none">
-        Message sent successfully!
-    </div>
-     <div id="error-box" class="message-box fixed bottom-5 right-5 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 transform translate-y-2 pointer-events-none">
-        Please fill out all fields.
-    </div>
-     <div id="ai-error-box" class="message-box fixed bottom-5 right-5 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 transform translate-y-2 pointer-events-none">
-        Could not generate ideas. Please try again.
-    </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- Mobile Menu ---
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const thumbnailCards = document.querySelectorAll('.thumbnail-card');
 
-            // --- Portfolio Data ---
-            const portfolioData = [
-                { category: 'youtube', title: 'Epic Gaming Moment', desc: 'High-energy gaming thumbnail designed to maximize click-through rates.', img: 'https://placehold.co/600x400/1D4ED8/FFFFFF?text=Gaming+1' },
-                { category: 'social', title: 'Brand Campaign', desc: 'Clean, modern design for a social media campaign focusing on brand consistency.', img: 'https://placehold.co/600x400/F59E0B/FFFFFF?text=Social+1' },
-                { category: 'gaming', title: 'Battle Royale Win', desc: 'Action-packed thumbnail featuring explosive effects and character highlights.', img: 'https://placehold.co/600x400/DC2626/FFFFFF?text=Gaming+2' },
-                { category: 'business', title: 'Marketing Strategy', desc: 'Professional business thumbnail with clean lines and a corporate-friendly color scheme.', img: 'https://placehold.co/600x400/16A34A/FFFFFF?text=Business+1' },
-                { category: 'youtube', title: 'Tutorial Series', desc: 'Educational content thumbnail with clear hierarchy and instructional visuals.', img: 'https://placehold.co/600x400/1D4ED8/FFFFFF?text=YouTube+2' },
-                { category: 'social', title: 'Lifestyle Brand Post', desc: 'Aesthetic lifestyle content optimized for Instagram\'s visual-first platform.', img: 'https://placehold.co/600x400/F59E0B/FFFFFF?text=Social+2' },
-                { category: 'gaming', title: 'New Game Review', desc: 'Intriguing thumbnail for a game review, sparking curiosity.', img: 'https://placehold.co/600x400/DC2626/FFFFFF?text=Gaming+3' },
-                { category: 'business', title: 'Quarterly Report', desc: 'Data-visualization focused thumbnail for a corporate presentation.', img: 'https://placehold.co/600x400/16A34A/FFFFFF?text=Business+2' },
-            ];
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
 
-            const portfolioContainer = document.querySelector('#portfolio .grid');
+                const filterValue = btn.getAttribute('data-filter');
 
-            function renderPortfolio(items) {
-                portfolioContainer.innerHTML = items.map(item => `
-                    <div class="portfolio-item ${item.category}" data-category="${item.category}">
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
-                            <div class="overflow-hidden">
-                                <img src="${item.img}" alt="${item.title}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">${item.title}</h3>
-                                <p class="text-gray-600 mb-2 capitalize">${item.category}</p>
-                                <p class="text-gray-500">${item.desc}</p>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            renderPortfolio(portfolioData);
-            
-            // --- Portfolio Filter ---
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const portfolioItems = document.querySelectorAll('.portfolio-item');
-
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const filter = button.getAttribute('data-filter');
-                    
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-
-                    portfolioItems.forEach(item => {
-                        if (filter === 'all' || item.dataset.category === filter) {
-                            item.classList.remove('hidden');
-                        } else {
-                            item.classList.add('hidden');
-                        }
-                    });
+                thumbnailCards.forEach(card => {
+                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
                 });
             });
+        });
 
-            // --- Contact Form ---
-            const contactForm = document.getElementById('contact-form');
-            const messageBox = document.getElementById('message-box');
-            const errorBox = document.getElementById('error-box');
-
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const name = document.getElementById('name').value.trim();
-                const email = document.getElementById('email').value.trim();
-                const projectType = document.getElementById('project-type').value;
-                const projectDetails = document.getElementById('project-details').value.trim();
-
-                if (name && email && projectType && projectDetails) {
-                    showNotification(messageBox);
-                    contactForm.reset();
-                } else {
-                    showNotification(errorBox);
-                }
-            });
-
-            // --- AI Thumbnail Idea Generator ---
-            const generateBtn = document.getElementById('generate-ideas-btn');
-            const videoTitleInput = document.getElementById('video-title-input');
-            const ideaContainer = document.getElementById('idea-container');
-            const aiErrorBox = document.getElementById('ai-error-box');
-            const generateBtnText = document.getElementById('generate-btn-text');
-            const generateBtnSpinner = document.getElementById('generate-btn-spinner');
-
-            generateBtn.addEventListener('click', async () => {
-                const videoTitle = videoTitleInput.value.trim();
-                if (!videoTitle) {
-                    showNotification(errorBox, "Please enter a video title.");
-                    return;
-                }
-
-                // Show loading state
-                generateBtnText.classList.add('hidden');
-                generateBtnSpinner.classList.remove('hidden');
-                generateBtn.disabled = true;
-                ideaContainer.innerHTML = '<div class="flex justify-center"><div class="loader"></div></div>';
-
-                try {
-                    const prompt = `Generate 3 distinct, creative, and high-click-through-rate (CTR) YouTube thumbnail ideas for a video titled "${videoTitle}". For each idea, provide a concept title, a detailed visual description of the scene, the text to overlay on the thumbnail, and a suggested color palette.`;
-                    
-                    let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-                    const payload = { 
-                        contents: chatHistory,
-                        generationConfig: {
-                            responseMimeType: "application/json",
-                            responseSchema: {
-                                type: "OBJECT",
-                                properties: {
-                                    "thumbnail_ideas": {
-                                        "type": "ARRAY",
-                                        "items": {
-                                            "type": "OBJECT",
-                                            "properties": {
-                                                "concept_title": { "type": "STRING" },
-                                                "visual_description": { "type": "STRING" },
-                                                "text_overlay": { "type": "STRING" },
-                                                "color_palette": { "type": "STRING" }
-                                            },
-                                            required: ["concept_title", "visual_description", "text_overlay", "color_palette"]
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    };
-                    const apiKey = ""; 
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                    
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`API request failed with status ${response.status}`);
-                    }
-
-                    const result = await response.json();
-                    
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        
-                        const jsonText = result.candidates[0].content.parts[0].text;
-                        const ideas = JSON.parse(jsonText).thumbnail_ideas;
-                        displayIdeas(ideas);
-                    } else {
-                        throw new Error("No content in API response.");
-                    }
-
-                } catch (error) {
-                    console.error('Error generating ideas:', error);
-                    ideaContainer.innerHTML = '';
-                    showNotification(aiErrorBox, 'Failed to generate ideas. Please try again later.');
-                } finally {
-                    // Hide loading state
-                    generateBtnText.classList.remove('hidden');
-                    generateBtnSpinner.classList.add('hidden');
-                    generateBtn.disabled = false;
-                }
-            });
-
-            function displayIdeas(ideas) {
-                if (!ideas || ideas.length === 0) {
-                    ideaContainer.innerHTML = '<p class="text-center text-gray-500">No ideas were generated. Try a different title!</p>';
-                    return;
-                }
-                ideaContainer.innerHTML = ideas.map((idea, index) => `
-                    <div class="bg-white p-6 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.02]">
-                        <h3 class="text-2xl font-bold text-blue-600 mb-3">Idea ${index + 1}: ${idea.concept_title}</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Visuals:</h4>
-                                <p class="text-gray-600">${idea.visual_description}</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Text Overlay:</h4>
-                                <p class="text-gray-600 font-bold text-lg">"${idea.text_overlay}"</p>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Color Palette:</h4>
-                                <p class="text-gray-600">${idea.color_palette}</p>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Simple validation
+            if (!data.name || !data.email || !data.message) {
+                alert('Please fill in all required fields.');
+                return;
             }
+            
+            // Simulate form submission
+            const submitBtn = this.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('Thank you for your message! I\'ll get back to you soon.');
+                this.reset();
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
 
-
-            function showNotification(box, message = null) {
-                if (message) {
-                    box.textContent = message;
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
-                box.classList.remove('opacity-0', 'translate-y-2');
-                box.classList.add('opacity-100', 'transform-none');
-                setTimeout(() => {
-                    box.classList.remove('opacity-100', 'transform-none');
-                    box.classList.add('opacity-0', 'translate-y-2');
-                }, 4000);
+            });
+        });
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all thumbnail cards
+        thumbnailCards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
             }
         });
     </script>
